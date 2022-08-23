@@ -29,6 +29,7 @@
 
 char msgBuffer[MAXBUFFER]=""; //a typical msg is 86 characters
 const char c_delimiter=CHRDELIMITER; //current delimiter of a msg
+uint32_t starttime=0;
 
 // Edit these fields to match your own network setup
 const char* ssid        = "Faerynet-IoT-2G";
@@ -118,6 +119,7 @@ void setup() {
   setupWifi();
   setupMqtt(); //when returning from the setup, the MQTT connection is functional!
   Log.println("ESP is up and running, MQTT is ready to fire");
+  starttime=millis();
 }//end of setup()
 
 
@@ -126,10 +128,12 @@ void loop() {
 //listen to serial port until a begin of a new msg is found
 //then copy the rest of the msg and store in a buffer
 //when the end of the msg is found, send buffer to MQTT broker
-  static char chr;
+  static char chr='Q'; //random character
   static uint8_t idx; //index for buffer array
-  while(!Serial.available() ); //wait until a character is ready in the serial buffer
+
+  while(!Serial.available() ) delay(0); //wait until a character is ready in the serial buffer
 //  Log.println("Serial data available");
+
   do {
     chr=Serial.read(); //read 1 byte
   }while (chr!=c_delimiter);
@@ -137,6 +141,7 @@ void loop() {
   //delimiter is found, start new msg
   idx=0;
   do {
+    while(!Serial.available() ) delay(0); //crucial code! wait until next character is ready in the serial buffer
     chr=Serial.read();
     msgBuffer[idx]=chr;
     idx++;
@@ -146,7 +151,11 @@ void loop() {
     msgBuffer[idx]='\0';
   }
 
-  Log.println(msgBuffer); //send to MQTT
+  if (millis()-starttime > MQTTINTERVAL) {
+    Log.print(idx);Log.print("::");
+    Log.println(msgBuffer); //send to MQTT
+    starttime=millis();
+  }
 
   // Keep the connection alive and recieve incoming data
   // (not strictly needed in this sample, but good practice)

@@ -19,3 +19,4 @@
 
 #define MAXBUFFER 128    //a typical msg is 86 characters
 #define CHRDELIMITER ':' //start of new values in a msg
+#define MQTTINTERVAL 30000 //interval in milliseconds
