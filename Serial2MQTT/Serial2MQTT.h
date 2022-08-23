@@ -19,4 +19,8 @@
 
 #define MAXBUFFER 128    //a typical msg is 86 characters
 #define CHRDELIMITER ':' //start of new values in a msg
-#define MQTTINTERVAL 30000 //interval in milliseconds
+#define MQTTINTERVAL (30*1000) //interval in milliseconds
+
+#define BADCHAR  0  //state of charStatus: indicates unexpected character
+#define ENDCHAR  1  //state of charStatus: indicates expected serial message ending
+#define GOODCHAR 2  //state of charStatus: indicates a valid character in the serial stream
