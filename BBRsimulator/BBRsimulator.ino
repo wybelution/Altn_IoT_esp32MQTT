@@ -13,7 +13,7 @@
 //for production the DEBUG level should be set to 0
 
 void setup() {
-    Serial.begin(9600,SERIAL_8N1);
+    Serial.begin(115200,SERIAL_8N1);
     delay (100);
     pinMode(LED_BUILTIN, OUTPUT);       // prepare the LED for turning on and off
     digitalWrite(LED_BUILTIN, HIGH);    // turn the LED off by making the voltage HIGH...
